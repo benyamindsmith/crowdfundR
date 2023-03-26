@@ -4,15 +4,9 @@ library(shiny)
 
 # Creating a navlink
 admin_nav <- tags$ul(
-  tags$li(
-    tags$a(href = "/admin", "home"),
-  ),
-  tags$li(
+    tags$a(href = "/admin", "admin home"),
     tags$a(href = "/admin/graphics", "add graphics"),
-  ),
-  tags$li(
-    tags$a(href = "/admin/payments-pledges", "manage payments/pledges"),
-  )
+    tags$a(href = "/admin/payments-pledges", "manage payments/pledges")
 )
 
 home <- function() {
@@ -27,7 +21,8 @@ admin_home <- function() {
   page(
     href = "/admin",
     ui = tagList(
-      admin_nav
+      admin_nav,
+      h1("Admin Home")
     ),
     server = function(input, output, session) {},
     res_handlers = list()
@@ -38,7 +33,8 @@ admin_graphics <- function(){
   page(
     href = "/admin/graphics",
     ui = tagList(
-      admin_nav
+      admin_nav,
+      h1("Add Graphics To Your Campaign")
     ),
     server = function(input, output, session) {},
     res_handlers = list()
@@ -49,7 +45,8 @@ admin_payment_pledges <- function(){
   page(
     href = "/admin/payments-pledges",
     ui = tagList(
-      admin_nav
+      admin_nav,
+      h1("Manage Payments And Pledges")
     ),
     server = function(input, output, session) {},
     res_handlers = list()
