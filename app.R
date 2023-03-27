@@ -1,61 +1,61 @@
 #remotes::install_github("ColinFay/brochure")
-library(brochure)
 library(shiny)
+library(shiny.router)
+
 
 # Creating a navlink
 admin_nav <- tags$ul(
-    tags$a(href = "/admin", "admin home"),
-    tags$a(href = "/admin/graphics", "add graphics"),
-    tags$a(href = "/admin/payments-pledges", "manage payments/pledges")
+  tags$a(href = route_link("/admin"), "admin home"),
+  tags$a(href = route_link("/admin/graphics"), "add graphics"),
+  tags$a(href = route_link("/admin/payments-pledges"), "manage payments/pledges")
 )
 
-home <- function() {
-  page(
-    href = "/",
-    ui = tagList(),
-    server = function(input, output, session) {}
-  )
-}
 
-admin_home <- function() {
-  page(
-    href = "/admin",
-    ui = tagList(
-      admin_nav,
-      h1("Admin Home")
-    ),
-    server = function(input, output, session) {},
-    res_handlers = list()
-  )
-}
 
-admin_graphics <- function(){
-  page(
-    href = "/admin/graphics",
-    ui = tagList(
-      admin_nav,
-      h1("Add Graphics To Your Campaign")
-    ),
-    server = function(input, output, session) {},
-    res_handlers = list()
-  )
-}
-
-admin_payment_pledges <- function(){
-  page(
-    href = "/admin/payments-pledges",
-    ui = tagList(
-      admin_nav,
-      h1("Manage Payments And Pledges")
-    ),
-    server = function(input, output, session) {},
-    res_handlers = list()
-  )
-}
-brochureApp(
-  # Pages
-  home(),
-  admin_home(),
-  admin_graphics(),
-  admin_payment_pledges()
+home <- div(
+  titlePanel("Dashboard"),
+  p("This is a dashboard page")
 )
+
+admin_home <- fluidRow(
+  column(12,
+         admin_nav,
+         h1("Admin Home"))
+  )
+
+admin_graphics <- fluidRow(
+  column(12,
+         admin_nav,
+         h1("Add Graphics To Your Campaign"),
+         fluidRow(
+           column(6,
+                  fileInput("heroBannerInput",
+                            "Choose Hero Banner",
+                            accept = c('image/png', 'image/jpeg'))
+                  )
+         ))
+  )
+
+admin_payment_pledges <- fluidRow(
+  column(12,
+         admin_nav,
+         h1("Manage Payments And Pledges"))
+  )
+
+
+router <- router_ui(
+  route("/", home),
+  route("admin", admin_home),
+  route("admin/graphics", admin_graphics),
+  route("admin/payments-pledges",admin_payment_pledges)
+)
+
+ui <- fluidPage(
+  router
+)
+
+server <- function(input, output, session) {
+  router_server(root_page = "/")
+}
+
+shinyApp(ui, server)
